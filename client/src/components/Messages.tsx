@@ -1,4 +1,5 @@
 import { useChatContext } from "../context/ChatContext";
+import { Authorization } from "./Authozition";
 
 export const Messages = () => {
     const {currentChannel, messages, users} = useChatContext();
@@ -19,13 +20,15 @@ export const Messages = () => {
                     {currentChannel?.title}
                 </h1>
             </header>
-            <ul className='m-12'>
+            
+            <ul className='m-12 relative'>
+                <Authorization />
                 {messagesWithUsers.map(message => 
                 <li key={message._id} className="flex gap-5">
                     <div className="w-12 h-12 border rounded">
-                        <img src={message.userId?.avatar} alt={message.userId?.username}/></div>
+                        <img src={message.userId?.avatar} alt={message.userId?.lastName}/></div>
                     <div>
-                        <p>{message.userId?.username}     {}</p>
+                        <p className=""><span className="mr-9">{message.userId?.firstName} {message.userId?.lastName}</span>{message.created}</p>
                         <p>{message.content}</p> 
                     </div>
                 </li>)}

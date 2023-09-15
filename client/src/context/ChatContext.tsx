@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useState, useContext, useEffect } from "react";
+import { ReactNode, createContext, useState, useContext, useEffect, useCallback } from "react";
 import { Channel } from "../types/Channel";
 import { User } from "../types/User";
 import { getChannels, getMessages, getUsers } from "../api/api";
@@ -12,6 +12,9 @@ interface ChatContextInterface {
     users: User[] | [],
     messages: Message[] | [],
     channels: Channel[] | []
+    loggedUser: User | null,
+    modalProfile: boolean,
+    handleModalProfile: () => void,
 }
 
 export const ChatContext = createContext<ChatContextInterface>({
@@ -21,7 +24,10 @@ export const ChatContext = createContext<ChatContextInterface>({
     currentChannel: null,
     users: [],
     messages: [],
-    channels: []
+    channels: [],
+    loggedUser: null,
+    modalProfile: false,
+    handleModalProfile: () => {},
 });
 
 export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
@@ -30,6 +36,12 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
     const [users, setUsers] = useState<User[]>([]);
     const [messages, setMessages] = useState<Message[]>([]);
     const [channels, setChannels] = useState<Channel[]>([]);
+    const [loggedUser, setLoggedUser] = useState(null);
+    const [modalProfile, setModalProfile] = useState(false);
+
+    const handleModalProfile = useCallback(() => {
+        setModalProfile(!modalProfile);
+    },[modalProfile]);
     
     useEffect(() => {
         const loadingData = async () => {
@@ -56,6 +68,12 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
         loadingData();
     }, []);
 
+    useEffect(() => {
+        const localStr = localStorage.getItem('User')
+        const loggedInUser = localStr ? JSON.parse(localStr) : null;
+        setLoggedUser(loggedInUser);
+    }, [loggedUser]);
+
     const handleChangeChannel = (channel: Channel) => {
         handleOnChannel();
         setCurrentChannel(channel);
@@ -72,7 +90,10 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
             currentChannel,
             users,
             messages,
-            channels
+            channels,
+            loggedUser,
+            modalProfile,
+            handleModalProfile
         }}>
             {children}
         </ChatContext.Provider>)

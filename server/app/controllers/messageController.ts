@@ -1,11 +1,13 @@
 import { Request, Response } from 'express';
 import Message from '../models/Message';
+import { format } from 'date-fns';
 
 class MessageController {
     public async createMessage(req: Request, res: Response): Promise<void> {
         const { userId, channelId, content } = req.body;
         try {
-            const newMessage = await Message.create({ userId, channelId, content });
+            const formattedDate = format(new Date(), 'dd-MM-yyyy');
+            const newMessage = await Message.create({ userId, channelId, content, created: formattedDate });
             res.status(202).json(newMessage);
         } catch (e) {
             console.log(e);

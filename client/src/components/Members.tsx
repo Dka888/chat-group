@@ -1,4 +1,5 @@
 import { useChatContext } from "../context/ChatContext";
+import { Profile } from "./Profile";
 
 export const Members = () => {
 
@@ -7,7 +8,7 @@ export const Members = () => {
     return (
         <div className='hidden md:block md:col-start-1 md:col-end-3 bg-left text-white py-3 relative'>
             <div className='flex' onClick={handleOnChannel}>
-                <img src="/arrow_back.svg" className='white ml-6 cursor-pointer' alt="arrow-back" />
+                <img src="/arrow_back.svg" className='ml-6 cursor-pointer' alt="arrow-back" />
                 <h2 className='mx-3 font-bold'>
                     All channels
                 </h2>
@@ -21,21 +22,22 @@ export const Members = () => {
             <div className='md:my-7 mx-auto text-center'>
                 <ul>
                     {users.map(user => {
-                        const firstLetter = user.username[0];
-                        const secondWord = user.username.split(' ')[1];
-                        const secondLetter = secondWord !== undefined ? secondWord[0] : '';
+                        const firstLetter = user.firstName[0];
+                        const secondLetter = user.lastName[0] ?? '';
                         return (
                             <li className="flex" key={user._id}>
-                                <div className="mx-6 w-10 h-10 bg-input rounded flex justify-center items-center">{firstLetter} {!!secondLetter && secondLetter}</div>
-                                <p className="text-center my-auto">{user.username}</p>
+                                <div className="mx-6 w-10 h-10 bg-input rounded flex justify-center items-center">
+                                    {firstLetter}{secondLetter}
+                                </div>
+                                <p className="text-center my-auto">
+                                    {user.firstName} {user.lastName}
+                                </p>
                             </li>
                         )
                     })}
                 </ul>
             </div>
-            <div className='w-full h-14 py-2 my-auto text-center border border-black bg-black absolute bottom-0'>
-                User
-            </div>
+            <Profile />
         </div>
     )
 }

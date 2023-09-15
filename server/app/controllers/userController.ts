@@ -3,9 +3,9 @@ import User from '../models/User';
 
 class UserController {
   public async createUser(req: Request, res: Response): Promise<void> {
-    const { username, email, avatar, password } = req.body;
+    const { firstName, lastName, email, avatar, password } = req.body;
     try {
-      const newUser = await User.create({ username, email, avatar, password });
+      const newUser = await User.create({ firstName, lastName, email, avatar, password });
       res.status(201).json(newUser);
     } catch (error) {
       res.status(500).json({ error: 'Server error' });

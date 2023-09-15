@@ -1,4 +1,5 @@
 import { useChatContext } from "../context/ChatContext";
+import { Profile } from "./Profile";
 
 export const Channels = () => {
     const { handleChangeChannel, channels } = useChatContext();
@@ -41,9 +42,7 @@ export const Channels = () => {
                     })}
                 </ul>
             </div>
-            <div className='w-full h-14 py-2 my-auto text-center border border-black bg-black absolute bottom-0'>
-                User
-            </div>
+           <Profile />
         </div>
 
     )
