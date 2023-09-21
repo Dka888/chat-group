@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useState, useContext, useEffect, useCallback } from "react";
+import { ReactNode, createContext, useState, useContext, useEffect, useCallback, useMemo } from "react";
 import { Channel } from "../types/Channel";
 import { User } from "../types/User";
 import { getChannels, getMessages, getUsers } from "../api/api";
@@ -15,6 +15,17 @@ interface ChatContextInterface {
     loggedUser: User | null,
     modalProfile: boolean,
     handleModalProfile: () => void,
+    handleModalLogin: () => void,
+    handleModalRegister: () => void,
+    modalLogin: boolean,
+    modalRegister: boolean,
+    handleModalChannel: () => void,
+    modalChannel: boolean,
+    tempMessage: Message | null,
+    setTempMessage: (tempMessage: Message | null) => void,
+    searchingChannel: Channel[],
+    query: string,
+    setQuery: (query: string) => void,
 }
 
 export const ChatContext = createContext<ChatContextInterface>({
@@ -28,6 +39,17 @@ export const ChatContext = createContext<ChatContextInterface>({
     loggedUser: null,
     modalProfile: false,
     handleModalProfile: () => {},
+    handleModalLogin: () => { },
+    handleModalRegister: () => {},
+    modalLogin: false,
+    modalRegister: false,
+    handleModalChannel: () => {},
+    modalChannel: false,
+    tempMessage: null,
+    setTempMessage: () => {},
+    searchingChannel: [],
+    query: '',
+    setQuery: () => {},
 });
 
 export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
@@ -38,11 +60,49 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
     const [channels, setChannels] = useState<Channel[]>([]);
     const [loggedUser, setLoggedUser] = useState(null);
     const [modalProfile, setModalProfile] = useState(false);
+    const [modalLogin, setModalLogin] = useState(false);
+    const [modalRegister, setModalRegister] = useState(false);
+    const [modalChannel, setModalChannel] = useState(false);
+    const [tempMessage, setTempMessage] = useState<Message | null>(null);
+    const [query, setQuery] = useState('');
 
+    //Handle callback functions:
     const handleModalProfile = useCallback(() => {
+        if (!modalLogin && !modalRegister && !modalChannel) {
         setModalProfile(!modalProfile);
-    },[modalProfile]);
-    
+        }
+    }, [modalLogin, modalRegister, modalProfile, modalChannel]);
+
+    const handleChangeChannel = useCallback((channel: Channel) => {
+        if (!modalLogin && !modalRegister && !modalChannel) {
+            handleOnChannel();
+            setCurrentChannel(channel);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [channels, modalLogin, modalChannel])
+
+    const handleOnChannel = useCallback(() => {
+        if (!modalLogin && !modalRegister && !modalChannel) {
+            setOnChannel(!onChannel);
+        }
+    }, [modalLogin, modalRegister, onChannel, modalChannel]);
+
+    const handleModalLogin = useCallback(() => {
+        setModalLogin(!modalLogin);
+        setModalProfile(false);
+    }, [modalLogin]);
+
+    const handleModalChannel = useCallback(() => {
+        setModalChannel(!modalChannel)
+    }, [modalChannel])
+
+    const handleModalRegister = useCallback(() => {
+        setModalRegister(!modalRegister)
+        setModalProfile(false);
+    },[modalRegister]);
+
+
+    // useEffects part:   
     useEffect(() => {
         const loadingData = async () => {
             const data = await getChannels();
@@ -51,14 +111,13 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
         loadingData();
     }, []);
 
-
     useEffect(() => {
         const loadingData = async () => {
             const response = await getMessages();
             setMessages(response)
         };
         loadingData();
-    }, []);
+    }, [messages]);
 
     useEffect(() => {
         const loadingData = async () => {
@@ -69,19 +128,21 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     useEffect(() => {
-        const localStr = localStorage.getItem('User')
+        const localStr = localStorage.getItem('loggedInUser')
         const loggedInUser = localStr ? JSON.parse(localStr) : null;
         setLoggedUser(loggedInUser);
-    }, [loggedUser]);
+    }, []);
 
-    const handleChangeChannel = (channel: Channel) => {
-        handleOnChannel();
-        setCurrentChannel(channel);
-    }
+// useMemo
+    const searchingChannel = useMemo(() => {
+        let newChannels = channels;
+        const trimmedQuery = query.trim().toUpperCase();
+        if(query) {
+            newChannels = newChannels.filter(channel => channel.title.toUpperCase().includes(trimmedQuery))
+        }
+        return newChannels
+    }, [channels, query]);
 
-    const handleOnChannel = () => {
-        setOnChannel(!onChannel)
-    }
     return (
         <ChatContext.Provider value={{
             onChannel,
@@ -93,7 +154,18 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
             channels,
             loggedUser,
             modalProfile,
-            handleModalProfile
+            handleModalProfile,
+            handleModalLogin,
+            modalLogin,
+            handleModalRegister,
+            modalRegister,
+            handleModalChannel,
+            modalChannel,
+            tempMessage,
+            setTempMessage,
+            searchingChannel,
+            query,
+            setQuery
         }}>
             {children}
         </ChatContext.Provider>)
