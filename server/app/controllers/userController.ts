@@ -22,6 +22,21 @@ class UserController {
     }
   }
 
+  public async loginUser(req: Request, res: Response): Promise<void> {
+    const { email, password } = req.body
+    try {
+      const user = await User.findOne({email, password});
+      if(!user) {
+        res.status(404);
+      } else {
+          res.status(200).json(user);
+          console.log(user)
+      }
+    }catch(e){
+      res.status(500).json(e);
+    }
+  }
+
   public async getOneUser(req: Request, res: Response): Promise<void> {
     try {
       const {id} = req.params;
