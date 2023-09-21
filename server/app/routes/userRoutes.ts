@@ -6,6 +6,7 @@ const router = Router();
 router.post('/register', UserController.createUser);
 
 router.get('/', UserController.getUsers);
+router.post('/login', UserController.loginUser);
 
 router.get('/:id', UserController.getOneUser);
 
