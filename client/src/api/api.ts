@@ -2,7 +2,7 @@ import { Channel } from "../types/Channel";
 import { Message } from "../types/Message";
 import { User } from "../types/User";
 
-export const url = 'http://localhost:3333/api';
+export const url = 'https://chat-group-backend-jtb0mxr7t-dka888.vercel.app/api';
 
 export async function getChannels() {
    const response = await fetch(`${url}/channels`);
