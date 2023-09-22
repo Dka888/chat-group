@@ -12,7 +12,6 @@ export async function getChannels() {
 
 export async function getUsers() {
    const response = await fetch(`${url}/users`);
-   console.log(response)
    return response.json(); 
 }
 
@@ -90,5 +89,10 @@ export async function createMessage(message: Omit<Message,'_id' | 'created'>) {
       body: JSON.stringify(message),
    });
    console.log(response.json())
+   return response.json();
+}
+
+export async function getOneUser () {
+   const response = await fetch(`${url}/users/65046f7c7717547f0fc184d8`)
    return response.json();
 }

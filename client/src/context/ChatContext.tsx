@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useState, useContext, useEffect, useCallback, useMemo } from "react";
 import { Channel } from "../types/Channel";
 import { User } from "../types/User";
-import { getChannels, getMessages, getUsers } from "../api/api";
+import { getChannels, getMessages, getOneUser, getUsers } from "../api/api";
 import { Message } from "../types/Message";
 
 interface ChatContextInterface {
@@ -110,6 +110,16 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
         };
         loadingData();
     }, []);
+
+    //set log in user
+    useEffect(() => {
+        const dataOneUser = async () => {
+            const user = await getOneUser();
+            localStorage.setItem('loggedInUser', user)
+            setLoggedUser(user);
+        }
+        dataOneUser();
+    }, [])
 
     useEffect(() => {
         const loadingData = async () => {
