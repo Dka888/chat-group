@@ -6,7 +6,6 @@ export const url = 'https://chat-group-backend-jtb0mxr7t-dka888.vercel.app/api';
 
 export async function getChannels() {
    const response = await fetch(`${url}/channels`);
-   console.log(response)
    return response.json(); 
 } 
 
@@ -88,7 +87,6 @@ export async function createMessage(message: Omit<Message,'_id' | 'created'>) {
       },
       body: JSON.stringify(message),
    });
-   console.log(response.json())
    return response.json();
 }
 
