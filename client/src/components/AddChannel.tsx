@@ -18,15 +18,15 @@ export const AddChannel = () => {
     }, [description, title]);
 
     return (
-        <div className="w-1/2 bg-black tex-white z-99 absolute left-40 top-20 p-8 rounded-lg">
+        <div className="w-full row-start-2 row-end-3 col-start-2 col-end-5 md:col-start-5 md:col-end-10 bg-black -translate-x-4 md:-translate-y-6">
         <form 
-            className="flex flex-col gap-6"
+            className="flex flex-col gap-2 m-1 md:mx-2 "
             onSubmit={submitFormChannel}
         >
-             <div className="absolute top-0 right-0 w-4 h-4 bg-input rounded-full transform-translate hover:rotate-180 cursor-pointer"
+             <div className="flex justify-end"
                 onClick={handleModalChannel}
             >
-                <img src="/close.svg" alt="close" />
+                <img src="/close.svg" alt="close" className="w-4 h-4 bg-input cursor-pointer"/>
             </div>
             <h4 className="uppercase font-semibold">Create channel</h4>
             <input
@@ -42,7 +42,7 @@ export const AddChannel = () => {
                 onChange={(e) => setDescription(e.target.value)}
                 value={description}
             ></textarea>
-            <div className="grid justify-items-end">
+            <div className="grid justify-center">
                 <button 
                     className="bg-blue-400 rounded p-1 w-16 hover:bg-blue-500 font-semibold"
                 >

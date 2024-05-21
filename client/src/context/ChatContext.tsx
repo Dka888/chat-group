@@ -115,7 +115,7 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const dataOneUser = async () => {
             const user = await getOneUser();
-            localStorage.setItem('loggedInUser', user)
+            localStorage.setItem('loggedInUser', JSON.stringify(user));
             setLoggedUser(user);
         }
         dataOneUser();
@@ -138,7 +138,7 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     useEffect(() => {
-        const localStr = localStorage.getItem('loggedInUser')
+        const localStr = localStorage.getItem('loggedInUser');
         const loggedInUser = localStr ? JSON.parse(localStr) : null;
         setLoggedUser(loggedInUser);
     }, []);

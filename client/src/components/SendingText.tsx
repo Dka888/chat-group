@@ -25,19 +25,20 @@ export const SendingText = () => {
     },[currentChannel, loggedUser, message]);
    
     return (
-        <div className="absolute bottom-20 md:bottom-10 w-3/4">
+        <div className="absolute bottom-3 right-1 md:bottom-10 md:w-3/4">
             <form 
                 onSubmit={handleSubmitMessage}
             >
                 <input
-                    className='m-12 md:mb-2 w-full rounded-lg bg-input h-12 px-5'
+                    className='m-12 md:mb-2 w-5/6 rounded-lg bg-input h-12 px-5'
                     type='text'
                     onChange={(e) => setMessage(e.target.value)}
                     value={message}
                 ></input>
-                <button className="absolute -right-7 top-14 h-8 cursor-pointer">
+                <button className="absolute left-[17rem] md:left-[62vw] top-14 h-8 cursor-pointer">
                     <img src="/send.svg" alt="send"  />
                 </button>
+                
             </form>
         </div>
     )

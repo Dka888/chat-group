@@ -1,11 +1,8 @@
 import { useChatContext } from "../context/ChatContext";
-import { AddChannel } from "./AddChannel";
-import { Authorization } from "./Authozition";
-import { Registration } from "./Registration";
 import { SendingText } from "./SendingText";
 
 export const Messages = () => {
-    const { currentChannel, messages, users, modalLogin, modalRegister, modalChannel} = useChatContext();
+    const { currentChannel, messages, users} = useChatContext();
 
     function getUserById (id: string) {
       return users.find(user => user._id === id) ?? null;
@@ -25,32 +22,32 @@ export const Messages = () => {
       : 0;
 
     return (
-        <div className='col-start-1 col-end-5 md:col-start-3 md:col-end-12 text-white py-2 z-1'>
+        <div className='col-start-2 col-end-5 md:col-start-3 md:col-end-12 text-white py-2 z-1'>
             <header className='h-9 w-full relative z-1'>
-                <h1 className="text-2xl font-bold m-auto text-center text-white uppercase">
+                <h1 className="text-lg md:text-2xl font-bold m-auto text-center text-white uppercase">
                     {currentChannel?.title}
                 </h1>
             </header>
             
-            <div className='m-12 relative h-2/3 overflow-hidden '>
-               
+            <div className='m-2 md:m-12 relative h-[70vh] overflow-hidden '>            
                 <ul
                     className="absolute inset-x-0 top-0"
                     style={{ transform: `translateY(-${overflow}px)`}}
                 >
                     {messagesWithUsers.map(message => 
-                        <li key={message._id} className={`flex gap-5 m-1.5 my-3`} >
-                    <div className="w-12 h-12 border rounded mr-5">
-                        <img src={message.userId?.avatar} alt={message.userId?.lastName}/></div>
-                    <div>
-                        <p className=""><span className="mr-9">{message.userId?.firstName} {message.userId?.lastName}</span>{message.created}</p>
-                        <p>{message.content}</p> 
-                    </div>
+                        <li key={message._id} className={`flex gap-3 md:gap-5 m-1.5 my-3`} >
+                            <div className="w-12 h-12 border rounded mr-2 md:mr-5">
+                                <img src={message.userId?.avatar} alt={message.userId?.lastName}/>
+                            </div>
+                            <div className="w-full">
+                                <div className="flex text-xs md:text-base justify-between">
+                                    <span className="mr-3 md:mr-9 italic">{message.userId?.firstName} {message.userId?.lastName}</span>
+                                    <span className="font-normal">{message.created}</span>
+                                </div>
+                                <p className="font-semibold">{message.content}</p> 
+                            </div>
                 </li>)}
                 </ul>
-                {modalLogin && <Authorization />}
-                {modalRegister && <Registration />}
-                {modalChannel && <AddChannel />}
             </div>
             <SendingText />
         </div>
